@@ -11,6 +11,8 @@ public:
 	static Animal* make_animal(AnimalTypes st); //Factory Method
 
 	virtual void make_a_noise() = 0; //pure virtual member function
+
+	virtual ~Animal(){};
 };
 
 int main()
