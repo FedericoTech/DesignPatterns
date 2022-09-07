@@ -5,11 +5,12 @@ class GlobalClass
 	int m_value;
 	static GlobalClass *s_instance;
 
-	GlobalClass(int v = 0){
+	GlobalClass(int v = 0) //we make the constructor private
+	{
 		m_value = v;
 	}
 
-	void operator = (GlobalClass const&) = delete;
+	void operator = (GlobalClass const&) = delete;	//we get rid of the copy constructor
 
 public:
 	int get_value(){ return m_value; }
