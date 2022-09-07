@@ -4,10 +4,11 @@
 #define LINUX
 
 //abstract class
-class Widget {
-public:
+struct Widget {
 	virtual void draw() = 0;
+	virtual ~Widget() = 0;
 };
+Widget::~Widget(){};
 
 
 //concrete product family 1
@@ -45,10 +46,12 @@ class Factory {
 public:
 	virtual Widget* create_button() = 0;
 	virtual Widget* create_menu() = 0;
+	virtual ~Factory(){}
+
 };
 
 
-//concrete factory for linux
+//concrete factory for Linux
 class LinuxFactory : public Factory{
 public:
 	Widget* create_button(){
