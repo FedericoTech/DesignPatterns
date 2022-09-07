@@ -3,8 +3,10 @@
 //Step 1
 struct Shape {
 	virtual void draw() = 0;
-	virtual ~Shape(){}
+	virtual ~Shape() = 0;
 };
+
+Shape::~Shape(){};
 
 //Step 2
 class Rectangle: public Shape {
