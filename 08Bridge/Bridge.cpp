@@ -3,8 +3,10 @@
 //Step 1
 struct DrawAPI{
 	virtual void drawCircle(int radius, int x, int y) = 0;
-	virtual ~DrawAPI() {};
+	virtual ~DrawAPI() = 0;
 };
+
+DrawAPI::~DrawAPI(){}
 
 //Step 2
 class RedCircle: public DrawAPI{
@@ -22,12 +24,14 @@ class GreenCircle: public DrawAPI {
 //Step 3
 struct Shape {
 	virtual void draw() = 0;
-	virtual ~Shape(){};
+	virtual ~Shape() = 0;
 
 	protected:
 		DrawAPI *drawAPI;
 		Shape(DrawAPI &drawAPI): drawAPI(&drawAPI) {};
 };
+
+Shape::~Shape(){};
 
 //Step 4
 class Circle: public Shape {
