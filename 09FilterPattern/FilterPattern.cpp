@@ -30,8 +30,9 @@ public:
 
 struct Criteria {
 	virtual std::list<Person> meetCriteria(std::list<Person> persons) = 0;
-	virtual ~Criteria() {}
+	virtual ~Criteria() = 0;
 };
+Criteria::~Criteria(){};
 
 //Step 3
 
