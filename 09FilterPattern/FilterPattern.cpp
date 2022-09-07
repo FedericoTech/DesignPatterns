@@ -13,18 +13,29 @@ class Person
 public:
 	Person(std::string name, std::string gender, std::string maritalStatus):name(name), gender(gender), maritalStatus(maritalStatus){}
 
-	std::string inline getName(){return name;}
+	std::string inline getName() const {return name;}
 
-	std::string inline getGender(){return gender;}
+	std::string inline getGender() const {return gender;}
 
-	std::string inline getMaritalStatus(){return maritalStatus;}
+	std::string inline getMaritalStatus() const {return maritalStatus;}
 
 	bool operator == (Person const &p){
 		return p.name.compare(this->name) == 0
 			&& p.gender.compare(this->gender) == 0
 			&& p.maritalStatus.compare(this->maritalStatus) == 0;
 	}
+
+	friend std::ostream& operator << (std::ostream& os, const Person p);
 };
+
+std::ostream& operator << (std::ostream &os, const Person p)
+{
+	os << "Person : [ Name : " << p.getName()
+		<< ", Gender : " << p.getGender()
+		<< ", Marital Status : " << p.getMaritalStatus()
+		<< " ]";
+	return os;
+}
 
 //Step 2
 
@@ -139,10 +150,7 @@ public:
 
 void printPersons(std::list<Person> persons){
 	for(Person person : persons){
-		std::cout << "Person : [ Name : " << person.getName()
-			<< ", Gender : " << person.getGender()
-			<< ", Marital Status : " << person.getMaritalStatus()
-			<< " ]" << std::endl;
+		std::cout << person << std::endl;
 	}
 }
 
