@@ -5,15 +5,16 @@
 enum class AnimalTypes : char;
 
 //abstract class Animal
-class Animal
+struct Animal
 {
-public:
 	static Animal* make_animal(AnimalTypes st); //Factory Method
 
 	virtual void make_a_noise() = 0; //pure virtual member function
 
-	virtual ~Animal(){};
+	virtual ~Animal() = 0;
 };
+
+Animal::~Animal(){};
 
 int main()
 {
