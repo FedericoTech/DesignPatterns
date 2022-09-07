@@ -3,14 +3,16 @@
 //Step 1
 struct MediaPlayer{
 	virtual void play(std::string audioType, std::string fileName) = 0;
-	virtual ~MediaPlayer() {};
+	virtual ~MediaPlayer() = 0;
 };
+MediaPlayer::~MediaPlayer(){};
 
 struct AdvancedMediaPlayer {
 	virtual void playVlc(std::string fileName) = 0;
 	virtual void playMp4(std::string fileName) = 0;
-	virtual ~AdvancedMediaPlayer() {};
+	virtual ~AdvancedMediaPlayer() = 0;
 };
+AdvancedMediaPlayer::~AdvancedMediaPlayer(){};
 
 //Step 2
 struct VlcPlayer: AdvancedMediaPlayer {
