@@ -74,11 +74,10 @@ static int getRandomNum()
 //Step 4
 int main()
 {
-	ShapeFactory factory;
 
 	for(int i = 0; i < 20; i++){
 
-		Circle* circle = (Circle *) factory.getCircle(getRandomColor());
+		Circle* circle = (Circle *) ShapeFactory::getCircle(getRandomColor());
 
 		circle->setX(getRandomNum());
 		circle->setY(getRandomNum());
