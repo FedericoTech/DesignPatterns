@@ -9,7 +9,7 @@ public:
 
 	void reset(){value = 0;}
 
-	int getValue(){
+	inline int getValue(){
 		return value;
 	}
 
@@ -26,7 +26,7 @@ private:
 
 	static ObjectPool* instance;
 
-	ObjectPool(){}
+	ObjectPool(){}	//make the constructor private
 
 	void operator = (ObjectPool const&) = delete; //we get rid of the copy constructor
 
