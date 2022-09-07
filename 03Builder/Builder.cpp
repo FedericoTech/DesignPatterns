@@ -44,13 +44,12 @@ private:
 	char _desc[200], _temp[80];
 };
 
-class Builder
+struct Builder
 {
-public:
 	virtual void configureFile(const char *) = 0;
 	virtual void configureQueue(const char *) = 0;
 	virtual void configurePathway(const char *) = 0;
-	virtual ~Builder(){};
+	virtual ~Builder() = 0;
 
 	DistWorkPackage *getResult()
 	{
@@ -60,6 +59,8 @@ public:
 protected:
 	DistWorkPackage *_result;
 };
+
+Builder::~Builder(){};
 
 class UnixBuilder: public Builder
 {
