@@ -1,16 +1,18 @@
 #include <iostream>
 #include <vector>
 
-class Animal {
-protected:
-	int some_value = -1;
-public:
+struct Animal {
 	Animal(){};
 	Animal(int value):some_value(value){};
 	virtual Animal* clone() = 0;
 	virtual void make_noise() = 0;
-	virtual ~Animal(){};
+	virtual ~Animal() = 0;
+protected:
+	int some_value = -1;
 };
+
+Animal::~Animal(){};
+
 
 class Factory {
 public:
