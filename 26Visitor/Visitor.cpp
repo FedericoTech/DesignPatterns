@@ -99,6 +99,7 @@ public:
 int main(int argc, char *argv[])
 {
 	ComputerPart *computer = new Computer;
+
 	computer->accept(new ComputerPartDisplayVisitor());
 }
 
