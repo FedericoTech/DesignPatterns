@@ -13,6 +13,7 @@ BusinessService::~BusinessService(){};
 class EJBService: public BusinessService
 {
 	void doProcessing() override {
+		//Enterprise Java Bean
 		std::cout << "Processing task by invoking EJB Service" << std::endl;
 	}
 };
@@ -20,6 +21,7 @@ class EJBService: public BusinessService
 class JMSService: public BusinessService
 {
 	void doProcessing() override {
+		//Java Messaging Services
 		std::cout << "Processing task by invoking JMS Service" << std::endl;
 	}
 };
@@ -57,7 +59,7 @@ public:
 	}
 };
 
-//Step 5
+//Step 5, it might be like a Java Server Pages, servlet or a java UI
 class Client
 {
 	BusinessDelegate *businessService;
