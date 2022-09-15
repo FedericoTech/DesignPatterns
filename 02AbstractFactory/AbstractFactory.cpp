@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <memory>
 
 #define LINUX
 
@@ -46,10 +47,9 @@ class Factory {
 public:
 	virtual Widget* create_button() = 0;
 	virtual Widget* create_menu() = 0;
-	virtual ~Factory(){}
-
+	virtual ~Factory() = 0;
 };
-
+Factory::~Factory(){}
 
 //concrete factory for Linux
 class LinuxFactory : public Factory{
@@ -77,17 +77,18 @@ public:
 
 //client class that makes use of the factory that is passed to its constructor.
 class Client {
-private:
-	Factory *factory;
+	std::unique_ptr<Factory> factory;
 public:
 
-	Client(Factory *f): factory(f){}
+	Client(std::unique_ptr<Factory> f): factory(std::move(f)){}
 
 	void draw() {
 		Widget *w = factory->create_button();
 		w->draw();
 		display_windows_one();
 		display_windows_two();
+
+		delete w;
 	}
 
 	void display_windows_one(){
@@ -98,6 +99,10 @@ public:
 
 		w[0]->draw();
 		w[1]->draw();
+
+		for(auto e: w){
+			delete e;
+		}
 	}
 
 	void display_windows_two(){
@@ -108,21 +113,25 @@ public:
 
 		w[0]->draw();
 		w[1]->draw();
+
+		for(auto e: w){
+			delete e;
+		}
 	}
 };
 
 int main() {
-	Factory *factory;
+	std::unique_ptr<Factory> factory;
 
 #ifdef LINUX
-	factory = new LinuxFactory;
+	factory = std::make_unique<LinuxFactory>();
 #else
-	factory = new WindowsFactory;
+	factory = std::make_unique<WindowsFactory>();
 #endif
 
-	Client *c = new Client(factory);
+	Client c(std::move(factory));
 
-	c->draw();
+	c.draw();
 
 	return 0;
 }
