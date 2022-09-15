@@ -56,7 +56,7 @@ class Horse : public Animal
 public:
 	void make_a_noise()
 	{
-		std::cout << "Horse whinnys" << std::endl;
+		std::cout << "Horse whines" << std::endl;
 	}
 };
 
