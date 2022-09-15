@@ -60,7 +60,10 @@ protected:
 	DistWorkPackage *_result;
 };
 
-Builder::~Builder(){};
+Builder::~Builder()
+{
+	delete _result;
+};
 
 class UnixBuilder: public Builder
 {
@@ -112,6 +115,8 @@ public:
 	}
 
 	void construct(PersistenceAttribute[], int);
+
+	~Reader();
 private:
 	Builder *_builder;
 };
@@ -126,6 +131,10 @@ void Reader::construct(PersistenceAttribute list[], int num){
 			_builder->configurePathway(list[i].value);
 		}
 	}
+}
+
+Reader::~Reader(){
+	delete _builder;
 }
 
 const int NUM_ENTRIES = 6;
