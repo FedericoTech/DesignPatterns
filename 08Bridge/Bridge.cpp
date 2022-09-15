@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 //Step 1
 struct DrawAPI{
@@ -28,17 +29,20 @@ struct Shape {
 
 	protected:
 		DrawAPI *drawAPI;
-		Shape(DrawAPI &drawAPI): drawAPI(&drawAPI) {};
+		Shape(DrawAPI *drawAPI): drawAPI(drawAPI) {};
 };
 
-Shape::~Shape(){};
+Shape::~Shape()
+{
+	delete drawAPI;
+};
 
 //Step 4
 class Circle: public Shape {
 	int x, y, radius;
 
 public:
-	Circle(DrawAPI &drawAPI, int x, int y, int radius): Shape(drawAPI), x(x), y(y), radius(radius){};
+	Circle(DrawAPI *drawAPI, int x, int y, int radius): Shape(drawAPI), x(x), y(y), radius(radius){};
 
 	void draw(){
 		this->drawAPI->drawCircle(radius, x, y);
@@ -46,22 +50,16 @@ public:
 };
 
 //Step 5
-int main(){
-
-	RedCircle rc;
-
+int main()
+{
 	//abstract classes have to be pointed to
-	Shape *redCircle = new Circle(rc, 100, 100, 10);
+	std::unique_ptr<Shape> redCircle = std::make_unique<Circle>(new RedCircle, 100, 100, 10);
 
-	GreenCircle gc;
-
-	Shape *greenCircle = new Circle(gc, 100, 100, 10);
+	std::unique_ptr<Shape> greenCircle = std::make_unique<Circle>(new GreenCircle, 100, 100, 10);
 
 	redCircle->draw();
 
 	greenCircle->draw();
 
 	return 0;
-
-
 }
