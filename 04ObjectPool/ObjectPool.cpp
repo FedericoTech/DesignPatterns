@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <list>
 
 class Resource
@@ -9,7 +10,8 @@ public:
 
 	void reset(){value = 0;}
 
-	inline int getValue(){
+	inline int getValue() const
+	{
 		return value;
 	}
 
@@ -21,21 +23,23 @@ public:
 //the ObjectPool is a singleton
 class ObjectPool
 {
-private:
 	std::list<Resource *> resources;
 
-	static ObjectPool* instance;
+	static std::shared_ptr<ObjectPool> instance;
 
-	ObjectPool(){}	//make the constructor private
+	ObjectPool() = default;	//make the constructor private
 
-	void operator = (ObjectPool const&) = delete; //we get rid of the copy constructor
+	ObjectPool(ObjectPool const &) = delete; //we get rid of the copy constructor
+
+	ObjectPool& operator=(ObjectPool const &) = delete;	//we get rid of the copy assignation
 
 public:
+
 	//method to get the singleton instance
-	static ObjectPool* getInstance()
+	static std::shared_ptr<ObjectPool> getInstance()
 	{
-		if(instance == NULL){
-			instance = new ObjectPool;
+		if(instance == nullptr){
+			instance = std::move(std::shared_ptr<ObjectPool>(new ObjectPool));
 		}
 
 		return instance;
@@ -61,14 +65,27 @@ public:
 		object->reset();
 		resources.push_back(object);
 	}
+
+	~ObjectPool()
+	{
+		for(Resource *r: resources)
+		{
+			delete r;
+		}
+	}
 };
 
-//we initialise the instance
-ObjectPool* ObjectPool::instance = 0;
+//we initialise the inner instance
+std::shared_ptr<ObjectPool> ObjectPool::instance = nullptr;
 
-int main(){
+int main()
+{
+	std::shared_ptr<ObjectPool> pool = ObjectPool::getInstance();
+	std::shared_ptr<ObjectPool> pool2 = ObjectPool::getInstance();
 
-	ObjectPool* pool = ObjectPool::getInstance();
+	std::cout << "is pool == pool2 ? " << (pool == pool2) << std::endl;
+	std::cout << "pool has " << pool.use_count() << " elements " << std::endl;
+
 	Resource* one;
 	Resource* two;
 
