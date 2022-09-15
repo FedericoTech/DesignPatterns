@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 //Step 1
 struct MediaPlayer{
@@ -40,14 +41,14 @@ struct Mp4Player: public AdvancedMediaPlayer {
 
 //Step 3
 class MediaAdapter: public MediaPlayer {
-	AdvancedMediaPlayer *advancedMusicPlayer;
+	std::unique_ptr<AdvancedMediaPlayer> advancedMusicPlayer = nullptr;
 
 public:
 	MediaAdapter(std::string audioType){
 		if(audioType.compare("vlc") == 0){
-			advancedMusicPlayer = new VlcPlayer();
+			advancedMusicPlayer = std::make_unique<VlcPlayer>();
 		} else if(audioType.compare("mp4") == 0){
-			advancedMusicPlayer = new Mp4Player();
+			advancedMusicPlayer = std::make_unique<Mp4Player>();
 		}
 	}
 
@@ -69,7 +70,7 @@ struct AudioPlayer: public MediaPlayer {
 		}
 		//mediaPlayer is providing support to play other file formats
 		else if(audioType.compare("vlc") == 0 || audioType.compare("mp4") == 0){
-			mediaAdapter = new MediaAdapter(audioType);
+			mediaAdapter = std::make_unique<MediaAdapter>(audioType);
 			mediaAdapter->play(audioType, fileName);
 		}
 		//any other type...
@@ -79,7 +80,7 @@ struct AudioPlayer: public MediaPlayer {
 	}
 
 protected:
-		MediaAdapter *mediaAdapter;
+	std::unique_ptr<MediaAdapter> mediaAdapter = nullptr;
 };
 
 int main(){
