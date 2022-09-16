@@ -47,6 +47,11 @@ public:
 
 		realImage->display();
 	}
+
+	~ProxyImage()
+	{
+		delete realImage;
+	}
 };
 
 //Step 3
