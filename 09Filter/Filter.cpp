@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <algorithm>
+#include <memory>
 
 //Step 1
 
@@ -11,7 +12,10 @@ class Person
 	std::string maritalStatus;
 
 public:
-	Person(std::string name, std::string gender, std::string maritalStatus):name(name), gender(gender), maritalStatus(maritalStatus){}
+	Person(std::string name, std::string gender, std::string maritalStatus)
+		:name(name),
+		 gender(gender),
+		 maritalStatus(maritalStatus){}
 
 	std::string inline getName() const {return name;}
 
@@ -40,7 +44,7 @@ std::ostream& operator << (std::ostream &os, const Person p)
 //Step 2
 
 struct Criteria {
-	virtual std::list<Person> meetCriteria(std::list<Person> persons) = 0;
+	virtual std::list<Person> meetCriteria(std::list<Person> &persons) = 0;
 	virtual ~Criteria() = 0;
 };
 Criteria::~Criteria(){};
@@ -50,7 +54,7 @@ Criteria::~Criteria(){};
 class CriteriaMale: public Criteria
 {
 public:
-	std::list<Person> meetCriteria(std::list<Person> persons){
+	std::list<Person> meetCriteria(std::list<Person> &persons){
 		std::list<Person> malePersons;
 
 		for(Person person: persons){
@@ -63,14 +67,14 @@ public:
 			}
 		}
 
-		return malePersons;
+		return std::move(malePersons);
 	}
 };
 
 class CriteriaFemale: public Criteria
 {
 public:
-	std::list<Person> meetCriteria(std::list<Person> persons){
+	std::list<Person> meetCriteria(std::list<Person> &persons){
 		std::list<Person> femalePersons;
 
 		for(Person person: persons){
@@ -83,14 +87,14 @@ public:
 			}
 		}
 
-		return femalePersons;
+		return std::move(femalePersons);
 	}
 };
 
 class CriteriaSingle: public Criteria
 {
 public:
-	std::list<Person> meetCriteria(std::list<Person> persons){
+	std::list<Person> meetCriteria(std::list<Person> &persons){
 		std::list<Person> singlePersons;
 
 		for(Person person: persons){
@@ -103,34 +107,38 @@ public:
 			}
 		}
 
-		return singlePersons;
+		return std::move(singlePersons);
 	}
 };
 
 class AndCriteria: public Criteria
 {
-	Criteria *criteria;
-	Criteria *otherCriteria;
+	std::shared_ptr<Criteria> criteria;
+	std::shared_ptr<Criteria> otherCriteria;
 public:
 
-	AndCriteria(Criteria *criteria, Criteria *otherCriteria): criteria(criteria), otherCriteria(otherCriteria){};
+	AndCriteria(std::shared_ptr<Criteria> criteria, std::shared_ptr<Criteria> otherCriteria)
+		: criteria(criteria),
+		  otherCriteria(otherCriteria){};
 
-	std::list<Person> meetCriteria(std::list<Person> persons){
+	std::list<Person> meetCriteria(std::list<Person> &persons){
 		std::list<Person> firstCriteriaPersons = criteria->meetCriteria(persons);
 
-		return otherCriteria->meetCriteria(firstCriteriaPersons);
+		return std::move(otherCriteria->meetCriteria(firstCriteriaPersons));
 	}
 };
 
 class OrCriteria: public Criteria
 {
-	Criteria *criteria;
-	Criteria *otherCriteria;
+	std::shared_ptr<Criteria> criteria;
+	std::shared_ptr<Criteria> otherCriteria;
+
 public:
+	OrCriteria(std::shared_ptr<Criteria> criteria, std::shared_ptr<Criteria> otherCriteria)
+		: criteria(criteria),
+		  otherCriteria(otherCriteria){};
 
-	OrCriteria(Criteria *criteria, Criteria *otherCriteria): criteria(criteria), otherCriteria(otherCriteria){};
-
-	std::list<Person> meetCriteria(std::list<Person> persons){
+	std::list<Person> meetCriteria(std::list<Person> &persons){
 		std::list<Person> firstCriteriaItems = criteria->meetCriteria(persons);
 		std::list<Person> otherCriteriaItems = otherCriteria->meetCriteria(persons);
 
@@ -142,13 +150,13 @@ public:
 
 		}
 
-		return firstCriteriaItems;
+		return std::move(firstCriteriaItems);
 	}
 };
 
 //Step 4
 
-void printPersons(std::list<Person> persons){
+void printPersons(const std::list<Person> persons){
 	for(Person person : persons){
 		std::cout << person << std::endl;
 	}
@@ -165,11 +173,13 @@ int main()
 	persons.push_back(Person("Mike", "Male", "Single"));
 	persons.push_back(Person("Bobby", "Male", "Single"));
 
-	Criteria *male = new CriteriaMale();
-	Criteria *female = new CriteriaFemale();
-	Criteria *single = new CriteriaSingle();
-	Criteria *singleMale = new AndCriteria(single, male);
-	Criteria *singleOrFemale = new OrCriteria(single, female);
+	std::shared_ptr<Criteria> male = std::make_shared<CriteriaMale>();
+	std::shared_ptr<Criteria> female = std::make_shared<CriteriaFemale>();
+	std::shared_ptr<Criteria> single = std::make_shared<CriteriaSingle>();
+
+	std::unique_ptr<Criteria> singleMale = std::make_unique<AndCriteria>(single, male);
+	std::unique_ptr<Criteria> singleOrFemale = std::make_unique<OrCriteria>(single, female);
+
 
 	std::cout << "Males: " << std::endl;
 	printPersons(male->meetCriteria(persons));
