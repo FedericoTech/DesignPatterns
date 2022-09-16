@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 //Step 1
 struct Shape {
@@ -25,6 +26,7 @@ class Circle: public Shape {
 
 struct ShapeDecorator: public Shape {
 	ShapeDecorator(Shape *decoratedShape):decoratedShape(decoratedShape) {};
+
 	void draw(){
 		decoratedShape->draw();
 	}
@@ -33,7 +35,10 @@ protected:
 	Shape *decoratedShape;
 };
 
-ShapeDecorator::~ShapeDecorator(){}; //to keep this class abstract as well
+ShapeDecorator::~ShapeDecorator()
+{
+	delete decoratedShape;
+}; //to keep this class abstract as well
 
 
 //Step 4
@@ -55,11 +60,12 @@ public:
 
 int main(){
 
-	Shape *circle = new Circle();
+	std::unique_ptr<Shape> circle = std::make_unique<Circle>();
 
-	Shape *redCircle = new RedShapeDecorator(new Circle());
+	std::unique_ptr<Shape> redCircle = std::make_unique<RedShapeDecorator>(new Circle());
 
-	Shape *redRectangle = new RedShapeDecorator(new Rectangle());
+	std::unique_ptr<Shape> redRectangle = std::make_unique<RedShapeDecorator>(new Rectangle());
+
 	std::cout << "Circle with normal border" << std::endl;
 	circle->draw();
 
