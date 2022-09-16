@@ -40,7 +40,10 @@ class ShapeMaker{
 	Shape *square;
 
 public:
-	ShapeMaker(): circle(new Circle()), rectangle(new Rectangle), square(new Square()){};
+	ShapeMaker()
+		: circle(new Circle()),
+		  rectangle(new Rectangle),
+		  square(new Square()){};
 
 	void drawCircle(){
 		circle->draw();
@@ -52,6 +55,13 @@ public:
 
 	void drawSquare(){
 		square->draw();
+	}
+
+	~ShapeMaker()
+	{
+		delete circle;
+		delete rectangle;
+		delete square;
 	}
 };
 
