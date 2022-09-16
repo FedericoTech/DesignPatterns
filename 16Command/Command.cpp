@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <memory>
 
 //Step 1
 struct Order {
@@ -32,9 +33,9 @@ public:
 
 //Step 3
 class BuyStock: public Order{
-	Stock * abcStock;
+	std::shared_ptr<Stock> abcStock;
 public:
-	BuyStock(Stock * abcStock):abcStock(abcStock){};
+	BuyStock(std::shared_ptr<Stock> abcStock):abcStock(abcStock){};
 
 	void execute()
 	{
@@ -43,9 +44,9 @@ public:
 };
 
 class SellStock: public Order {
-	Stock * abcStock;
+	std::shared_ptr<Stock> abcStock;
 public:
-	SellStock(Stock *abcStock):abcStock(abcStock){};
+	SellStock(std::shared_ptr<Stock> abcStock):abcStock(abcStock){};
 
 	void execute(){
 		abcStock->sell();
@@ -55,16 +56,16 @@ public:
 //Step 4
 class Broker
 {
-	std::list<Order *> orderList;
+	std::list<std::shared_ptr<Order>> orderList;
 
 public:
-	void takeOrder(Order *order){
+	void takeOrder(std::shared_ptr<Order> order){
 		orderList.push_back(order);
 	}
 
 	void placeOrders()
 	{
-		for(Order *order : orderList){
+		for(auto order : orderList){
 			order->execute();
 		}
 
@@ -76,11 +77,11 @@ public:
 //Step 5
 int main()
 {
-	Stock * abcStok = new Stock;
+	std::shared_ptr<Stock> abcStok = std::make_shared<Stock>();
 
-	BuyStock *buyStockOrder = new BuyStock(abcStok);
+	std::shared_ptr<BuyStock> buyStockOrder = std::make_shared<BuyStock>(abcStok);
 
-	SellStock *sellStockOrder = new SellStock(abcStok);
+	std::shared_ptr<SellStock> sellStockOrder = std::make_shared<SellStock>(abcStok);
 
 	Broker broker;
 	broker.takeOrder(buyStockOrder);
