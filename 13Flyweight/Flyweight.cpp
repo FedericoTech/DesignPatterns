@@ -55,6 +55,14 @@ public:
 
 		return circle;
 	}
+
+	~ShapeFactory()
+	{
+		//we delete all the pointers from circleMap
+		for(auto t : circleMap){
+			delete t.second;
+		}
+	}
 };
 
 std::unordered_map<std::string, Shape *> ShapeFactory::circleMap; //we need to do this for the static member
