@@ -1,4 +1,5 @@
 #include<iostream>
+#include <memory>
 
 //Step 1
 struct AbstractLogger {
@@ -33,7 +34,10 @@ protected:
 	virtual void write(std::string message) = 0;
 };
 
-AbstractLogger::~AbstractLogger(){};
+AbstractLogger::~AbstractLogger(){
+	std::cout << "Destructor called " << level << std::endl;
+	delete nextLogger;
+};
 
 //Step 2
 class ConsoleLogger: public AbstractLogger {
@@ -83,7 +87,8 @@ static AbstractLogger * getChainOfLoggers()
 
 int main()
 {
-	AbstractLogger *loggerChain = getChainOfLoggers();
+	//we create a smart pointer from the function getChainOfLoggers() instead of make_unique
+	std::unique_ptr<AbstractLogger> loggerChain(getChainOfLoggers());
 
 	loggerChain->logMessage(AbstractLogger::INFO, "This is an information.");
 
