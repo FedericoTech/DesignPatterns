@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 //Step 1
 
@@ -24,27 +25,42 @@ public:
 
 class OrExpression: public Expression
 {
-	Expression *expr1 = nullptr;
-	Expression *expr2 = nullptr;
+	Expression *expr1;
+	Expression *expr2;
 
 public:
+	OrExpression() = delete;
+
 	OrExpression(Expression *expr1, Expression *expr2): expr1(expr1), expr2(expr2){};
 
 	bool interpret(std::string context){
 		return expr1->interpret(context) || expr2->interpret(context);
 	}
+
+	~OrExpression()
+	{
+		delete expr1;
+		delete expr2;
+	}
 };
 
 class AndExpression: public Expression
 {
-	Expression *expr1 = nullptr;
-	Expression *expr2 = nullptr;
+	Expression *expr1;
+	Expression *expr2;
 
 public:
+	AndExpression() = delete;
+
 	AndExpression(Expression *expr1, Expression *expr2):expr1(expr1), expr2(expr2){};
 
 	bool interpret(std::string context){
 		return expr1->interpret(context) && expr2->interpret(context);
+	}
+
+	~AndExpression(){
+		delete expr1;
+		delete expr2;
 	}
 };
 
@@ -70,13 +86,13 @@ static Expression * getMarriedWomanExpression()
 
 int main()
 {
-	Expression *isMale = getMaleExpression();
+	std::unique_ptr<Expression> isMale(getMaleExpression());
 
-	Expression *isMarriedWoman = getMarriedWomanExpression();
+	std::unique_ptr<Expression> isMarriedWoman(getMarriedWomanExpression());
 
-	std::cout << "John is male? " << isMale->interpret("John") << std::endl;
+	std::cout << "John is male? " << (isMale->interpret("John") ? "yes" : "no") << std::endl;
 
-	std::cout << "Julie is a married woman? " << isMarriedWoman->interpret("Married Julie") << std::endl;
+	std::cout << "Julie is a married woman? " << (isMarriedWoman->interpret("Married Julie") ? "yes" : "no") << std::endl;
 
 	return 0;
 }
