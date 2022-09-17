@@ -2,7 +2,7 @@
 #include <algorithm>
 
 //Step 1
-
+//we create the abstract iterator template
 template<typename T>
 struct Iterator {
 	virtual bool hasNext() = 0;
@@ -13,47 +13,63 @@ struct Iterator {
 template<typename T>
 Iterator<T>::~Iterator(){};
 
+//we declare the container template
 template<typename T>
 struct Container {
-	virtual Iterator<T> *getIterator() = 0;
-	virtual ~Container() = 0;
-};
+	T data[4];
 
-template<typename T>
-Container<T>::~Container(){};
-
-//Step 2
-class NameRepository: public Container<std::string>
-{
-public:
-	std::string names[4] = {"Robert", "John", "Julie", "Lora"};
-
-	class NameIterator: public Iterator<std::string>
-	{
+	//we create an inner implementation of the iterator
+	template<class U>
+	class  ContainerIterator : public Iterator<U> {
 		int index = 0;
-		NameRepository &parent;
-	public:
-
-		NameIterator(NameRepository &parent):parent(parent){};
+		Container<U> &parent;
 
 		bool hasNext()
 		{
-			return index < std::end(parent.names) - std::begin(parent.names);
+			return index < std::end(parent.data) - std::begin(parent.data);
 		}
 
-		std::string* next()
+		U* next()
 		{
 			if(hasNext()){
-				return &parent.names[index++];
+				return &parent.data[index++];
 			}
 
 			return nullptr;
 		}
+
+	public:
+		ContainerIterator(Container<U> &parent): parent(parent) {}
 	};
 
-	Iterator<std::string> *getIterator()
+	Iterator<T> *getIterator()
 	{
-		return new NameIterator(*this);
+		return new ContainerIterator<T>(*this);
+	}
+};
+
+//Step 2
+//now we create a couple implementations of container
+
+class NameRepository: public Container<std::string>
+{
+public:
+	NameRepository(){
+		data[0] = "Robert";
+		data[1] = "John";
+		data[2] = "Julie";
+		data[3] = "Lora";
+	}
+};
+
+class NumberRepository: public Container<int>
+{
+public:
+	NumberRepository(){
+		data[0] = 30;
+		data[1] = 23;
+		data[2] = 78;
+		data[3] = 1;
 	}
 };
 
@@ -65,6 +81,15 @@ int main()
 	for(Iterator<std::string> *iter = namesRespository.getIterator(); iter->hasNext();){
 		std::string *name = iter->next();
 		std::cout << "Name : " << *name << std::endl;
+	}
+
+	std::cout << std::endl << std::endl;
+
+	NumberRepository numbersRespository;
+
+	for(Iterator<int> *iter = numbersRespository.getIterator(); iter->hasNext();){
+		int num = *iter->next();
+		std::cout << "Number : " << num << std::endl;
 	}
 
 	return 0;
