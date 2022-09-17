@@ -83,7 +83,7 @@ struct Container {
 		return new ContainerIterator<T>(*this);
 	}
 
-	Iterator<T> *getIterator() const
+	const Iterator<T> *getIterator() const
 	{
 		return new ContainerIterator<T>(*this);
 	}
