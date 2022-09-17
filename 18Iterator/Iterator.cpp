@@ -78,11 +78,13 @@ struct Container {
 		}
 	};
 
+	//get iterator non-const version
 	Iterator<T> *getIterator()
 	{
 		return new ContainerIterator<T>(*this);
 	}
 
+	//get iterator const version
 	const Iterator<T> *getIterator() const
 	{
 		return new ContainerIterator<T>(*this);
