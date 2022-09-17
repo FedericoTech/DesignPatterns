@@ -14,15 +14,15 @@ template<typename T>
 Iterator<T>::~Iterator(){};
 
 //we declare the container template
-template<typename T>
+template<typename T, std::size_t N>
 struct Container {
-	T data[4];
+	T data[N];
 
 	//we create an inner implementation of the iterator
 	template<class U>
 	class  ContainerIterator : public Iterator<U> {
 		int index = 0;
-		Container<U> &parent;
+		Container<U, N> &parent;
 
 		bool hasNext()
 		{
@@ -39,7 +39,7 @@ struct Container {
 		}
 
 	public:
-		ContainerIterator(Container<U> &parent): parent(parent) {}
+		ContainerIterator(Container<U, N> &parent): parent(parent) {}
 	};
 
 	Iterator<T> *getIterator()
@@ -51,7 +51,7 @@ struct Container {
 //Step 2
 //now we create a couple implementations of container
 
-class NameRepository: public Container<std::string>
+class NameRepository: public Container<std::string, 4>
 {
 public:
 	NameRepository(){
@@ -62,7 +62,7 @@ public:
 	}
 };
 
-class NumberRepository: public Container<int>
+class NumberRepository: public Container<int, 7>
 {
 public:
 	NumberRepository(){
@@ -70,6 +70,9 @@ public:
 		data[1] = 23;
 		data[2] = 78;
 		data[3] = 1;
+		data[4] = -45;
+		data[5] = -3;
+		data[6] = 16;
 	}
 };
 
