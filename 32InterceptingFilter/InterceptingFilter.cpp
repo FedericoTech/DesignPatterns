@@ -40,7 +40,7 @@ public:
 class FilterChain
 {
 	std::list<Filter *> filters;
-	Target *target;
+	Target *target = nullptr;
 public:
 	void addFilter(Filter *filter)
 	{
@@ -58,7 +58,18 @@ public:
 
 	void setTarget(Target *target)
 	{
+		delete this->target;
 		this->target = target;
+	}
+
+	~FilterChain()
+	{
+		for(Filter * f : filters){
+			delete f;
+		}
+
+		delete target;
+
 	}
 };
 
@@ -90,9 +101,9 @@ class Client
 	FilterManager *filterManager;
 
 public:
-	void setFilterManager(FilterManager *filterManager)
+	void setFilterManager(FilterManager &filterManager)
 	{
-		this->filterManager = filterManager;
+		this->filterManager = &filterManager;
 	}
 
 	void setRequest(std::string request)
@@ -110,7 +121,7 @@ int main(int argc, char *argv[])
 	filterManager.setFilter(new DebugFilter);
 
 	Client client;
-	client.setFilterManager(&filterManager);
+	client.setFilterManager(filterManager);
 	client.setRequest("HOME");
 
 	return 0;
