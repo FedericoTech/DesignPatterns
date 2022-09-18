@@ -11,7 +11,7 @@ struct Observer
 	protected:
 		Subject * subject = nullptr;
 		Observer(){};
-		Observer(Subject *subject):subject(subject){}
+		Observer(Subject &subject):subject(&subject){}
 	public:
 		virtual void update() = 0;
 		virtual ~Observer() = 0;
@@ -51,13 +51,15 @@ public:
 			}
 		);
 	}
+
+	~Subject(){}
 };
 
 //Step 3
 class BinaryObserver: public Observer
 {
 	public:
-	BinaryObserver(Subject *subject):Observer(subject)
+	BinaryObserver(Subject &subject):Observer(subject)
 	{
 		//this->subject = subject;
 		this->subject->attach(this);
@@ -71,9 +73,9 @@ class BinaryObserver: public Observer
 class OctalObserver: public Observer
 {
 	public:
-	OctalObserver(Subject *subject)//:Observer(subject)
+	OctalObserver(Subject &subject)//:Observer(subject)
 	{
-		this->subject = subject;
+		this->subject = &subject;
 		this->subject->attach(this);
 	}
 
@@ -85,7 +87,7 @@ class OctalObserver: public Observer
 class HexaObserver: public Observer
 {
 public:
-	HexaObserver(Subject *subject):Observer(subject)
+	HexaObserver(Subject &subject):Observer(subject)
 	{
 		//this->subject = subject;
 		this->subject->attach(this);
@@ -100,9 +102,9 @@ int main(int argc, char *argv[])
 {
 	Subject subject;
 
-	HexaObserver hexaObserver(&subject);
-	OctalObserver octalObserver(&subject);
-	BinaryObserver binaryObserver(&subject);
+	HexaObserver hexaObserver(subject);
+	OctalObserver octalObserver(subject);
+	BinaryObserver binaryObserver(subject);
 
 	std::cout << "First state change: 15" << std::endl;
 	subject.setState(15);
