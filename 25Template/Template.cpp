@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 //Step 1
 struct Game
@@ -60,17 +61,15 @@ public:
 
 int main(int argc, char *argv[])
 {
-	Game *game = new Cricket();
+	std::unique_ptr<Game> game = std::make_unique<Cricket>();
 	game->play();
 
-	delete game;
+	game.release();
 
 	std::cout << std::endl;
 
-	game = new Football();
+	game = std::make_unique<Football>();
 	game->play();
-
-	delete game;
 
 	return 0;
 }
