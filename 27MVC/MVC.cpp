@@ -29,6 +29,8 @@ public:
 
 	Student() = default;
 
+//not needed in this example
+/*
 	//move constructor
 	Student(Student &&other) noexcept
 	{
@@ -38,6 +40,7 @@ public:
 		other.rollNo = "";
 		other.name = "";
 	}
+	*/
 
 //not needed in this example
 /*
