@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <memory>
 
 //Step 1
 class Student
@@ -63,8 +64,8 @@ public:
 		Student student1("Robert", 0);
 		Student student2("John", 1);
 
-		students.push_back(student1);
-		students.push_back(student2);
+		students.push_back(std::move(student1));
+		students.push_back(std::move(student2));
 	}
 
 	void deleteStudent(Student student) override {
@@ -96,7 +97,7 @@ public:
 //Step 4
 int main(int argc, char *argv[])
 {
-	StudentDao *studentDao = new StudentDaoImpl();
+	std::unique_ptr<StudentDao>studentDao = std::make_unique<StudentDaoImpl>();
 
 	for(Student student: studentDao->getAllStudents()){
 		std::cout << "Student: [RollNo : " << student.getRollNo() << ", Name : " << student.getName() << " ]" << std::endl;
