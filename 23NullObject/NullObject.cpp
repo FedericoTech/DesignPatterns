@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 //Step 1
 struct AbstractCustomer
@@ -50,8 +51,13 @@ public:
 class CustomerFactory
 {
 	static const std::string names[3];
-	CustomerFactory(){}
-	void operator = (CustomerFactory const&) = delete;	//we get rid of the copy constructor
+
+	CustomerFactory() = delete;
+
+	CustomerFactory(CustomerFactory const &) = delete; //we get rid of the copy constructor
+
+	CustomerFactory& operator=(CustomerFactory const &) = delete;	//we get rid of the copy assignation
+
 public:
 	static AbstractCustomer *getCustomer(std::string name)
 	{
@@ -73,10 +79,10 @@ const std::string CustomerFactory::names[] = {"Rob", "Joe", "Julie"};
 
 int main(int argc, char *argv[])
 {
-	AbstractCustomer *customer1 = CustomerFactory::getCustomer("Rob");
-	AbstractCustomer *customer2 = CustomerFactory::getCustomer("Bob");
-	AbstractCustomer *customer3 = CustomerFactory::getCustomer("Julie");
-	AbstractCustomer *customer4 = CustomerFactory::getCustomer("Laura");
+	std::unique_ptr<AbstractCustomer> customer1(CustomerFactory::getCustomer("Rob"));
+	std::unique_ptr<AbstractCustomer> customer2(CustomerFactory::getCustomer("Bob"));
+	std::unique_ptr<AbstractCustomer> customer3(CustomerFactory::getCustomer("Julie"));
+	std::unique_ptr<AbstractCustomer> customer4(CustomerFactory::getCustomer("Laura"));
 
 	std::cout << "Customers" << std::endl;
 	std::cout << customer1->getName() << std::endl;
