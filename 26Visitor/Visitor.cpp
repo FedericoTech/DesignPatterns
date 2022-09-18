@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 struct ComputerPartVisitor;
 
@@ -39,6 +40,12 @@ class Computer: public ComputerPart
 
 public:
 	void accept(ComputerPartVisitor *computerPartVisitor);
+
+	~Computer(){
+		for(ComputerPart *cp : parts){
+			delete cp;
+		}
+	}
 };
 
 //Step 3
@@ -59,6 +66,8 @@ void Computer::accept(ComputerPartVisitor *computerPartVisitor)
 	}
 
 	computerPartVisitor->visit(this);
+
+	delete computerPartVisitor;
 };
 
 void Mouse::accept(ComputerPartVisitor *computerPartVisitor) {
@@ -98,7 +107,7 @@ public:
 //Step 5
 int main(int argc, char *argv[])
 {
-	ComputerPart *computer = new Computer;
+	std::unique_ptr<ComputerPart> computer = std::make_unique<Computer>();
 	computer->accept(new ComputerPartDisplayVisitor());
 }
 
