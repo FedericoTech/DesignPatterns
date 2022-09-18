@@ -14,6 +14,11 @@ public:
 	{
 		return state;
 	}
+/*
+	~Memento(){
+		std::cout << "memento destructor " << state << std::endl;
+	}
+*/
 };
 
 //Step 2
@@ -58,6 +63,12 @@ public:
 		auto l_front = mementoList.begin();
 		std::advance(l_front, index);
 		return *l_front;
+	}
+
+	~CareTaker(){
+		for(Memento *m : mementoList){
+			delete m;
+		}
 	}
 };
 
