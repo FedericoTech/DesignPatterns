@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstring>
+#include <memory>
 
 
 
@@ -49,8 +50,8 @@ void User::setMessage(std::string message)
 
 //Step 3
 int main() {
-	User *robert = new User("Robert");
-	User *john = new User("John");
+	std::unique_ptr<User> robert = std::make_unique<User>("Robert"); //this is the starndad way to do things
+	std::unique_ptr<User> john(new User("John")); //but we can do it this way also.
 
 	robert->setMessage("Hi! John!");
 	john->setMessage("Hello! Robert!");
