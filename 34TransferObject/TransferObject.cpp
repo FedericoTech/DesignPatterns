@@ -36,13 +36,11 @@ class StudentBO
 	//List is working as a database
 	StudentVOList students;
 public:
-	StudentBO()
+	StudentBO(std::initializer_list<StudentVO> list)
 	{
-		StudentVO student1("Robert", 0);
-		StudentVO student2("John", 1);
-
-		students.push_back(student1);
-		students.push_back(student2);
+		for(StudentVO st: list){
+			students.push_back(std::move(st));
+		}
 	}
 
 	void deleteStudent(StudentVO student)
@@ -73,7 +71,7 @@ public:
 //Step 3
 int main(int argc, char *argv[])
 {
-	StudentBO studentBusinessObject;
+	StudentBO studentBusinessObject = {{"Robert", 0}, {"John", 1}};
 
 	for(StudentVO student: studentBusinessObject.getAllStudents()){
 		std::cout << "Student: [RollNo : " << student.getRollNo() << ", Name : " << student.getName() << " ]" << std::endl;
