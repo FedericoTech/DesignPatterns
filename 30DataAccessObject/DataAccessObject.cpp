@@ -59,13 +59,11 @@ class StudentDaoImpl: public StudentDao
 	StudentList students;
 
 public:
-	StudentDaoImpl()
+	StudentDaoImpl(std::initializer_list<Student> list)
 	{
-		Student student1("Robert", 0);
-		Student student2("John", 1);
-
-		students.push_back(std::move(student1));
-		students.push_back(std::move(student2));
+		for(Student st: list){
+			students.push_back(std::move(st));
+		}
 	}
 
 	void deleteStudent(Student student) override {
@@ -97,7 +95,7 @@ public:
 //Step 4
 int main(int argc, char *argv[])
 {
-	std::unique_ptr<StudentDao>studentDao = std::make_unique<StudentDaoImpl>();
+	std::unique_ptr<StudentDao>studentDao = std::make_unique<StudentDaoImpl>(StudentDaoImpl {{"Robert", 0}, {"John", 1}});
 
 	for(Student student: studentDao->getAllStudents()){
 		std::cout << "Student: [RollNo : " << student.getRollNo() << ", Name : " << student.getName() << " ]" << std::endl;
