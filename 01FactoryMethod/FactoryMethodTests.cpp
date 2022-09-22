@@ -1,10 +1,41 @@
-#include <iostream>
-
-#include "FactoryMethod.hpp"
-#include <gtest/gtest.h>
+#include "stdafx.h"
 
 
-TEST(FactoryMethod, createHorse)
+
+TEST(FactoryMethod, testMakeAnimalHorse)
+{
+	Animal *a = Animal::make_animal(Animal::AnimalTypes::Horse);
+
+	Horse *h = dynamic_cast<Horse *>(a);
+
+	EXPECT_NE(nullptr, h);
+
+	delete a;
+}
+
+TEST(FactoryMethod, testMakeAnimalDog)
+{
+	Animal *a = Animal::make_animal(Animal::AnimalTypes::Dog);
+
+	Dog *h = dynamic_cast<Dog *>(a);
+
+	EXPECT_NE(nullptr, h);
+
+	delete a;
+}
+
+TEST(FactoryMethod, testMakeAnimalCat)
+{
+	Animal *a = Animal::make_animal(Animal::AnimalTypes::Cat);
+
+	Cat *h = dynamic_cast<Cat *>(a);
+
+	EXPECT_NE(nullptr, h);
+
+	delete a;
+}
+
+TEST(FactoryMethod, horseWhines)
 {
 	Animal *a = Animal::make_animal(Animal::AnimalTypes::Horse);
 
@@ -15,7 +46,7 @@ TEST(FactoryMethod, createHorse)
 	EXPECT_EQ("Horse whines\n", testing::internal::GetCapturedStdout());
 }
 
-TEST(FactoryMethod, createDog)
+TEST(FactoryMethod, dogBarks)
 {
 	Animal *a = Animal::make_animal(Animal::AnimalTypes::Dog);
 
@@ -26,7 +57,7 @@ TEST(FactoryMethod, createDog)
 	EXPECT_EQ("Dog barks\n", testing::internal::GetCapturedStdout());
 }
 
-TEST(FactoryMethod, createCat)
+TEST(FactoryMethod, catMews)
 {
 	Animal *a = Animal::make_animal(Animal::AnimalTypes::Cat);
 

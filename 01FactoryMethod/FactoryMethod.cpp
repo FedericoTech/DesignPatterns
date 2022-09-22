@@ -3,31 +3,19 @@
 
 Animal::~Animal(){};
 
-class Horse : public Animal
+void Horse ::make_a_noise()
 {
-public:
-	void make_a_noise()
-	{
-		std::cout << "Horse whines" << std::endl;
-	}
+	std::cout << "Horse whines" << std::endl;
 };
 
-class Dog : public Animal
+void Dog::make_a_noise()
 {
-public:
-	void make_a_noise()
-	{
-		std::cout << "Dog barks" << std::endl;
-	}
+	std::cout << "Dog barks" << std::endl;
 };
 
-class Cat : public Animal
+void Cat ::make_a_noise()
 {
-public:
-	void make_a_noise()
-	{
-		std::cout << "Cat mews" << std::endl;
-	}
+	std::cout << "Cat mews" << std::endl;
 };
 
 //this is the factory function

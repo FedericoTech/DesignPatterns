@@ -27,10 +27,23 @@ struct Animal
 
 //fore declaration of the derived classes
 
-class Horse;
 
-class Dog;
+class Horse : public Animal
+{
+public:
+	void make_a_noise();
+};
 
-class Cat;
+class Dog : public Animal
+{
+public:
+	void make_a_noise();
+};
+
+class Cat : public Animal
+{
+public:
+	void make_a_noise();
+};
 
 #endif /* FACTORYMETHOD_HPP_ */
